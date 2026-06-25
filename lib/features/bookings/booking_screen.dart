@@ -212,6 +212,9 @@ class _BookingScreenState extends State<BookingScreen> {
 
                     SizedBox(height: 16),
 
+                    // Row 2: date and time shown side by side.
+                    // formatDate and formatTime convert raw DB strings
+                    // into human-readable display values.
                     Row(
                       children: [
                         Expanded(
@@ -238,6 +241,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
                     SizedBox(height: 16,),
 
+                    // Row 3: table number and guest count side by side.
                     Row( 
                       children: [
                         Expanded(
@@ -273,6 +277,7 @@ class _BookingScreenState extends State<BookingScreen> {
 
                     SizedBox(height: 16,),
 
+                    // Restaurant address show beneath the second devider
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -282,6 +287,99 @@ class _BookingScreenState extends State<BookingScreen> {
                     )
                   ],
                 ),
+              ),
+
+              SizedBox(height: 24),
+              
+              // --- Location sharing card ---
+              // A standalone card with a toggle that lets the user
+              // share their real-time arrival with the restaurant.
+              // The switch updates [locationSharing] via setState,
+              // but the value is not yet sent to the backend.
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1a1d24),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFF2a2d35)),
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Share Location', style: TextStyle(color: Colors.white, fontSize: 20)),
+                        
+                        // Purple Switch to match the app's accent colour.
+                        // TODO: wire onChanged to a backend call or
+                        // permissions request before enabling this in production.
+                        Switch(
+                          value: locationSharing, 
+                          onChanged: (value) {
+                            setState(() {
+                              locationSharing = value;
+                            });
+                          },
+                          activeColor: const Color(0xFFa78bfa),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Text('Let the restaurant track your arrival in real time',
+                    style: TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
+                  ]
+                ),
+              ),
+
+              SizedBox(height: 24,),
+
+              // --- Action buttons ---
+              // 'Check In' and 'Cancel' sit side by side in equal-width columns.
+              // TODO: replace print statements with real check-in and
+              // cancellation logic before release.
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: (){
+                        print('Check in tapped');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFa78bfa),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ), 
+                      ),
+                      child: const Text(
+                        'Check In',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        print('Cancel pressed');
+                      }, 
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1a1d24),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    )
+                  )
+                ]
               ),
             ],
           ),
