@@ -106,6 +106,38 @@ class _BookingScreenState extends State<BookingScreen> {
     return '$displayHour:$minute $period';
   }
 
+  Future<void> cancelBooking() async {
+    await BookingServices().cancelBooking(bookings[0].id);
+    setState(() {
+      bookings[0] = Booking(
+        id: bookings[0].id,
+        restaurantName: bookings[0].restaurantName,
+        restaurantAddress: bookings[0].restaurantAddress,
+        tableNumber: bookings[0].tableNumber,
+        date: bookings[0].date,
+        time: bookings[0].time,
+        guests: bookings[0].guests,
+        status: 'cancelled',
+      );
+    });
+  }
+
+  Future<void> checkIn() async {
+    await BookingServices().checkIn(bookings[0].id);
+    setState(() {
+      bookings[0] = Booking(
+        id: bookings[0].id,
+        restaurantName: bookings[0].restaurantName,
+        restaurantAddress: bookings[0].restaurantAddress,
+        tableNumber: bookings[0].tableNumber,
+        date: bookings[0].date,
+        time: bookings[0].time,
+        guests: bookings[0].guests,
+        status: 'checked_in',
+      );
+    });
+  }
+
   /// Builds the booking screen UI.
   ///
   /// Renders a full-screen [CircularProgressIndicator] while data
@@ -192,13 +224,21 @@ class _BookingScreenState extends State<BookingScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF0f3d2a),
+                            color: bookings[0].status == 'confirmed'
+                              ? const Color(0xFF0f3d2a)
+                              : bookings[0].status == 'checked_in'
+                              ? const Color(0xFF2d1f5e)
+                              : const Color(0xFF3d0f0f),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             bookings[0].status,
-                            style: const TextStyle(
-                              color: Color(0xFF4ade80),
+                            style: TextStyle(
+                              color: bookings[0].status == 'confirmed' 
+                              ? Color(0xFF4ade80)
+                              : bookings[0].status == 'checked_in'
+                              ? const Color(0xFFa78bfa)
+                              : const Color(0xFFff6b6b),
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -221,8 +261,11 @@ class _BookingScreenState extends State<BookingScreen> {
                           child: Column(
                             crossAxisAlignment:CrossAxisAlignment.start,
                             children: [
-                              Text('Date', style: TextStyle(color: Colors.grey, fontSize: 16)),
-                              Text(formatDate(bookings[0].date), style: TextStyle(color: Colors.white, fontSize: 20)),
+                                Text('Date', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                                Text(
+                                  formatDate(bookings[0].date), 
+                                  style: TextStyle(color: Colors.white, fontSize: 20)
+                                  ),
                               ],
                             ),
                           ),
@@ -232,7 +275,10 @@ class _BookingScreenState extends State<BookingScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Time', style: TextStyle(color: Colors.grey, fontSize: 16)),
-                              Text(formatTime(bookings[0].time), style: TextStyle(color: Colors.white, fontSize: 20)),
+                              Text(
+                                formatTime(bookings[0].time), 
+                                style: TextStyle(color: Colors.white, fontSize: 20)
+                              ),
                             ]
                           ),
                         ),
@@ -263,7 +309,8 @@ class _BookingScreenState extends State<BookingScreen> {
                             children: [
                               Text('Guests', style: TextStyle(color: Colors.grey, fontSize: 16)),
                               Text(
-                                '${bookings[0].guests} people', style: TextStyle(color: Colors.white, fontSize: 20),
+                                '${bookings[0].guests} people', 
+                                style: TextStyle(color: Colors.white, fontSize: 20),
                               )
                             ],
                           )
@@ -282,7 +329,9 @@ class _BookingScreenState extends State<BookingScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Restaurant Address', style: TextStyle(color: Colors.grey, fontSize: 16)),
-                        Text(bookings[0].restaurantAddress, style: TextStyle(color: Colors.white, fontSize: 20),)
+                        Text(bookings[0].restaurantAddress, 
+                        style: TextStyle(color: Colors.white, 
+                        fontSize: 20),)
                       ],
                     )
                   ],
@@ -344,7 +393,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: (){
-                        print('Check in tapped');
+                        checkIn();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFa78bfa),
@@ -364,7 +413,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        print('Cancel pressed');
+                        cancelBooking();
                       }, 
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1a1d24),

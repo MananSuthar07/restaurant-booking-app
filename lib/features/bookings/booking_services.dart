@@ -49,4 +49,18 @@ class BookingServices {
 
     return response['name'];
   }
+
+  Future<void> cancelBooking(String bookingId) async {
+    await _supabase
+    .from('bookings')
+    .update({'status' : 'cancelled'})
+    .eq('id', bookingId);
+  }
+
+  Future<void> checkIn(String bookingId) async {
+    await _supabase
+      .from('bookings')
+      .update({'status': 'checked_in'})
+      .eq('id', bookingId);
+  }
 }
