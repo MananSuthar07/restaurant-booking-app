@@ -138,6 +138,15 @@ class _BookingScreenState extends State<BookingScreen> {
     });
   }
 
+  String formatStatus(String status) {
+    switch (status) {
+      case 'confirmed': return 'Confirmed';
+      case 'checked_in': return 'Check In';
+      case 'cancelled': return 'Cancelled';
+      default: return status;
+    }
+  }
+
   /// Builds the booking screen UI.
   ///
   /// Renders a full-screen [CircularProgressIndicator] while data
@@ -227,18 +236,18 @@ class _BookingScreenState extends State<BookingScreen> {
                             color: bookings[0].status == 'confirmed'
                               ? const Color(0xFF0f3d2a)
                               : bookings[0].status == 'checked_in'
-                              ? const Color(0xFF2d1f5e)
-                              : const Color(0xFF3d0f0f),
+                                ? const Color(0xFF2d1f5e)
+                                : const Color(0xFF3d0f0f),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            bookings[0].status,
+                            formatStatus(bookings[0].status),
                             style: TextStyle(
-                              color: bookings[0].status == 'confirmed' 
+                              color: bookings[0].status == 'confirmed'
                               ? Color(0xFF4ade80)
                               : bookings[0].status == 'checked_in'
-                              ? const Color(0xFFa78bfa)
-                              : const Color(0xFFff6b6b),
+                                ? const Color(0xFFa78bfa)
+                                : const Color(0xFFff6b6b),
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -331,7 +340,7 @@ class _BookingScreenState extends State<BookingScreen> {
                         Text('Restaurant Address', style: TextStyle(color: Colors.grey, fontSize: 16)),
                         Text(bookings[0].restaurantAddress, 
                         style: TextStyle(color: Colors.white, 
-                        fontSize: 20),)
+                        fontSize: 16),)
                       ],
                     )
                   ],
